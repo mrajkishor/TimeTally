@@ -1,6 +1,5 @@
-Certainly! Below is a template for a README.md that outlines your project. It includes sections that describe the project, how to set it up, and how to use it. Make sure to customize the sections according to the specific details and features of your project.
 
-```markdown
+
 # Time Tracking Table
 
 ## Description
@@ -53,7 +52,7 @@ This will start the application on `localhost:3000` by default.
 - **View Total Time:** The total accumulated time across all timers is displayed above the table.
 
 
-## To Do Features
+## To Do Features (for contributors)
 
 - Maintain state changes in a localstorage.  
 - Keep historical data in localstorage. 
@@ -74,6 +73,3 @@ Contributions to enhance this project are welcome! Please follow these steps to 
 ## License
 
 This project is open-source and available under the MIT License.
-```
-
-Feel free to adjust the content to match your project's specifics, such as the features, setup instructions, and contribution guidelines. This README template provides a comprehensive overview that can be very helpful for presenting your project during interviews or to potential collaborators.
