@@ -36,7 +36,9 @@ function formatDate(date) {
 
 
 
-const ReportTable = () => {
+const ReportTable = ({ totalTimeInParent }) => {
+
+
 
     const [rowData, setRowData] = useState([
         {
@@ -52,7 +54,7 @@ const ReportTable = () => {
         {
             key: '3',
             col1: 'Effective Time',
-            col2: '10h 45min'
+            col2: `${totalTimeInParent}`
         }
     ]);
 
@@ -63,7 +65,16 @@ const ReportTable = () => {
         setRowData(newData);
     })
 
-    useEffect(() => { rowData ?? console.log(rowData[1].col2) }, [rowData[1].col2]);
+    useEffect(() => {
+
+        rowData ?? console.log(rowData[1].col2);
+
+        const newData = [...rowData]; // Clone the array
+        newData[2] = { ...newData[2], col2: totalTimeInParent }; // Update the item
+        setRowData(newData);
+
+
+    }, [rowData[1].col2, totalTimeInParent]);
 
     return <Table showHeader={false} pagination={false} columns={columns} dataSource={rowData} />
 

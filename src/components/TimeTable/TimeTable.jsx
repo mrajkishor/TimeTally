@@ -83,7 +83,9 @@ const EditableCell = ({
     }
     return <td {...restProps}>{childNode}</td>;
 };
-const TimeTable = () => {
+const TimeTable = ({
+    onTotalTimeUpdate
+}) => {
     const [dataSource, setDataSource] = useState([...JSON.parse(localStorage.getItem('timetable') ?? "[]")]);
     const [count, setCount] = useState(2);
     const [totalTime, setTotalTime] = useState(0); // Store total time in seconds
@@ -189,7 +191,21 @@ const TimeTable = () => {
         };
     });
 
+    useEffect(() => {
+        // Whenever data changes, recalculate the total time
+        const newTotalTime = dataSource.reduce((acc, row) => acc + (row.duration || 0), 0);
+        setTotalTime(newTotalTime);
 
+        // Format and send the total time to the parent component
+        onTotalTimeUpdate(formatGrossTime(newTotalTime));
+    }, [dataSource, onTotalTimeUpdate]);
+
+    const formatGrossTime = (seconds) => {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const remainingSeconds = seconds % 60;
+        return `${hours}h ${minutes}min ${remainingSeconds}sec`;
+    };
 
     const updateContextSwitches = (rowKey) => {
         const newData = dataSource.map(row => {
@@ -231,7 +247,7 @@ const TimeTable = () => {
             <AddItemForm onFinish={handleFinish} />
 
             <Divider />
-            <div>Total Time: {formatTotalTime()}</div>
+            {/* <div>Total Time: {formatTotalTime()}</div> */}
             <Table
                 components={components}
                 rowClassName={() => 'editable-row'}
