@@ -86,6 +86,8 @@ const EditableCell = ({
 const TimeTable = () => {
     const [dataSource, setDataSource] = useState([...JSON.parse(localStorage.getItem('timetable') ?? "[]")]);
     const [count, setCount] = useState(2);
+    const [totalTime, setTotalTime] = useState(0); // Store total time in seconds
+
 
     const defaultColumns = [
         {
@@ -104,6 +106,16 @@ const TimeTable = () => {
             render: (_, record) => (
                 <Space size="middle">
                     <Timer rowKey={record.key} updateContextSwitches={updateContextSwitches} onReset={resetContextSwitches}
+                        onUpdateDuration={(key, newDuration) => {
+                            // Update the duration in the dataSource
+                            const newData = dataSource.map(item => {
+                                if (item.key === key) {
+                                    return { ...item, duration: newDuration };
+                                }
+                                return item;
+                            });
+                            setDataSource(newData);
+                        }}
                     />
                 </Space>
             ),
@@ -124,6 +136,7 @@ const TimeTable = () => {
             key: uuidv4(),
             name: `${e.task}`,
             contextSwitches: 0,
+            duration: 0, // Initial duration
         };
         if (localStorage.getItem('timetable')) {
             // update the existing 
@@ -187,22 +200,38 @@ const TimeTable = () => {
         });
         setDataSource(newData);
     };
-    const resetContextSwitches = (rowKey) => {
+    const resetContextSwitches = (rowKey, seconds) => {
+        // Subtract the reset timer's seconds from the total time
+        setTotalTime(prev => prev > seconds ? prev - seconds : 0);
+
         const newData = dataSource.map(row => {
             if (row.key === rowKey) {
-                return { ...row, contextSwitches: 0 }; // Reset context switches to 0
+                return { ...row, contextSwitches: 0, duration: 0 }; // Reset context switches and duration to 0
             }
             return row;
         });
         setDataSource(newData);
     };
+    const formatTotalTime = () => {
+        const hours = Math.floor(totalTime / 3600);
+        const minutes = Math.floor((totalTime % 3600) / 60);
+        const seconds = totalTime % 60;
+        return `${hours}h ${minutes}min ${seconds}sec`;
+    };
+
+
+    useEffect(() => {
+        // Whenever data changes, recalculate the total time
+        const newTotalTime = dataSource.reduce((acc, row) => acc + row.duration, 0);
+        setTotalTime(newTotalTime);
+    }, [dataSource]);
 
     return (
         <div>
             <AddItemForm onFinish={handleFinish} />
 
             <Divider />
-
+            <div>Total Time: {formatTotalTime()}</div>
             <Table
                 components={components}
                 rowClassName={() => 'editable-row'}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from 'antd';
 
 const Timer = ({
-    rowKey, updateContextSwitches, onReset
+    rowKey, updateContextSwitches, onReset, onUpdateDuration
 }) => {
     const [seconds, setSeconds] = useState(0);
     const [isActive, setIsActive] = useState(false);
@@ -14,14 +14,19 @@ const Timer = ({
 
         if (isActive) {
             interval = setInterval(() => {
-                setSeconds((seconds) => seconds + 1);
+                setSeconds((seconds) => {
+                    const newSeconds = seconds + 1;
+                    // Call onUpdateDuration with newSeconds
+                    onUpdateDuration(rowKey, newSeconds);
+                    return newSeconds;
+                });
             }, 1000);
-        } else if (!isActive) {
+        } else {
             clearInterval(interval);
         }
 
         return () => clearInterval(interval);
-    }, [isActive, seconds]);
+    }, [isActive, seconds, rowKey, onUpdateDuration]);
 
     const toggle = () => {
 
@@ -47,10 +52,12 @@ const Timer = ({
 
     const reset = () => {
         setIsActive(false);
+        // Notify about the reset with the current seconds before resetting
+        onReset(rowKey, seconds);
         setSeconds(0);
-        setTransitionCount(0); // Reset transition count on reset
-        onReset(rowKey); // Call the onReset function passed as prop
-
+        setTransitionCount(0);
+        // Also update the duration to 0 in the parent component
+        onUpdateDuration(rowKey, 0);
     };
 
     const formatTime = () => {
