@@ -1,32 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { SideCard, MainCard } from './Components';
-
+import { Col, Row, Card } from 'antd';
+import ReportTable from './components/ReportTable';
+import TimeTable from './components/TimeTable/TimeTable';
 function App() {
   return (
     <div className="App">
-      <Container>
-        <Row>
-          <Col >
-            <div className="appheader">
-              TimeTally (using this table library : https://react-table-library.com/?path=/docs/getting-started-installation--page )
-            </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={4}>
-            <SideCard />
-          </Col>
-          <Col sm={8}>
-            <MainCard />
-          </Col>
-        </Row>
-      </Container>
-
-    </div>
+      <Row>
+        <Col span={18} push={6}>
+          <Card title="Time Table" bordered={false} style={{ margin: '1vw', textAlign: 'left' }}>
+            <TimeTable />
+          </Card>
+        </Col>
+        <Col span={6} pull={18}>
+          <Card title="Today's Report" bordered={false} style={{ margin: '1vw', textAlign: 'left' }}>
+            <ReportTable />
+          </Card>
+        </Col>
+      </Row>
+    </div >
   );
 }
 
