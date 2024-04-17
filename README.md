@@ -52,14 +52,6 @@ This will start the application on `localhost:3000` by default.
 - **View Total Time:** The total accumulated time across all timers is displayed above the table.
 
 
-## To Do Features (for contributors)
-
-- Maintain state changes in a localstorage.  
-- Keep historical data in localstorage. 
-- Create an analytics dashboard to compare between historical data. 
-- Create an export button to share the data in csv, or xsl format. 
-
-
 ## Contributing
 
 Contributions to enhance this project are welcome! Please follow these steps to contribute:
